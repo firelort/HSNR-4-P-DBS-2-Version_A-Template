@@ -12,22 +12,16 @@
 #include <libpq-fe.h>
 
 static PGconn *connection;
-static std::string databaseName;
 
 // Datenbank-Login
 // rc: 0 = ok, 1 = error
 int db_login(const string &user, const string &password, const string &host, const string &dbname) {
     std::string conninfo = "";
-    //Save the dbname in the database string
-    databaseName = dbname;
-
     //Build conninfo string with all given values plus timeout
-    conninfo.append("host=").append(host).append(" dbname=").append(dbname).append(" user=").append(user).append(
-            " password=").append(password).append(" connect_timeout=10");
+    conninfo.append("port=5432 host=").append(host).append(" dbname=").append(dbname).append(" user=").append(user).append(" password=").append(password);
 
     //Make a connection to the database
     connection = PQconnectdb(conninfo.c_str());
-
     //Check if backend was successfully made
     if (PQstatus(connection) != CONNECTION_OK) {
         //print error msg
@@ -135,20 +129,16 @@ int db_rollback() {
 int db_findhnr(const string &hnr) {
     PGresult *res;
 
-    std::string command = "SELECT hnr FROM ";
-    command.append(databaseName).append(" WHERE hnr=").append(hnr).append(";");
+    std::string command = "SELECT hnr FROM hersteller WHERE hnr='";
+    command.append(hnr).append("';");
 
     //Execute sql command DELETE from datbase; to delete all entries
     res = PQexec(connection, command.c_str());
 
     //Test if the command was successfully
-    if (PQresultStatus(res) != PGRES_COMMAND_OK) {
+    if (PQresultStatus(res) != PGRES_TUPLES_OK) {
         //print error msg
-        std::cout << "SQL Error | DELTE command '" << command << "' failed: " << PQerrorMessage(connection)
-                  << std::endl;
-
-        //finish connection
-        PQfinish(connection);
+        std::cout << "SQL Error | SELECT command " << command << " failed: " << PQerrorMessage(connection) << std::endl;
 
         //Clear the result variable
         PQclear(res);
@@ -178,9 +168,8 @@ int db_findhnr(const string &hnr) {
 int db_insert(const string &hnr, const string &name, const string &plz, const string &ort) {
     PGresult *res;
 
-    std::string command = "INSERT INTO ";
-    command.append(databaseName).append(" (hnr, name, plz, ort) VALUES ('").append(hnr).append("', ").append(
-            name).append("', ").append(plz).append("', ").append(ort).append("');");
+    std::string command = "INSERT INTO hersteller (hnr, name, plz, ort) VALUES ('";
+    command.append(hnr).append("', '").append(name).append("', '").append(plz).append("', '").append(ort).append("');");
 
     //Execute sql command INSERT to add a entry
     res = PQexec(connection, command.c_str());
@@ -188,11 +177,8 @@ int db_insert(const string &hnr, const string &name, const string &plz, const st
     //Test if the command was successfully
     if (PQresultStatus(res) != PGRES_COMMAND_OK) {
         //print error msg
-        std::cout << "SQL Error | INSERT command '" << command << "' failed: " << PQerrorMessage(connection)
+        std::cout << "SQL Error | INSERT command -" << command << "- failed: " << PQerrorMessage(connection)
                   << std::endl;
-
-        //finish connection
-        PQfinish(connection);
 
         //Clear the result variable
         PQclear(res);
@@ -212,20 +198,14 @@ int db_insert(const string &hnr, const string &name, const string &plz, const st
 int db_delete() {
     PGresult *res;
 
-    std::string command = "DELETE FROM ";
-    command.append(databaseName).append(";");
-
     //Execute sql command DELETE from datbase; to delete all entries
-    res = PQexec(connection, command.c_str());
+    res = PQexec(connection, "DELETE FROM hersteller;");
 
     //Test if the command was successfully
     if (PQresultStatus(res) != PGRES_COMMAND_OK) {
         //print error msg
-        std::cout << "SQL Error | DELTE command '" << command << "' failed: " << PQerrorMessage(connection)
-                  << std::endl;
+        std::cout << "SQL Error | DELTE command failed: " << PQerrorMessage(connection) << std::endl;
 
-        //finish connection
-        PQfinish(connection);
 
         //Clear the result variable
         PQclear(res);
