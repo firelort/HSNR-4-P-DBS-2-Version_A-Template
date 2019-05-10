@@ -12,20 +12,18 @@
 #define TOKENIZER_H
 
 #include <string>
-#include <list.h>
+#include "list.h"
 
+using namespace std;
 
 class Tokenizer {
 protected:
     unsigned int _pos;
-    List <string> _tokens;
+    List<string> _tokens;
 public:
-    Tokenizer(string data, string separator);
-
+    Tokenizer(string data, string separators);
     int countTokens();
-
-    std::string nextToken();
-
+    string nextToken();
     bool hasMoreTokens();
 };
 

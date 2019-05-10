@@ -12,7 +12,7 @@ LDFLAGS = -L`pg_config --libdir` -lstdc++
 # project files
 #--------------------------------
 PROGRAM = dbimp
-OBJECTS = main.o db.o
+OBJECTS = main.o db.o tokenizer.o
 
 
 # rules
