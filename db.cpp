@@ -38,7 +38,7 @@ int db_login(const string &user, const string &password, const string &host, con
     return 0;
 }
 
-// Datenbank-Logout todo:maybe
+// Datenbank-Logout
 void db_logout() {
     // Close the connection and cleanup
     PQfinish(connection);
@@ -124,7 +124,7 @@ int db_rollback() {
     return 0;
 }
 
-// Herstellernummer schon vorhanden? todo bitte testen
+// Herstellernummer schon vorhanden?
 // rc: 0 = noch nicht da, 1 = schon da, -1 = error
 int db_findhnr(const string &hnr) {
     PGresult *res;
@@ -163,7 +163,7 @@ int db_findhnr(const string &hnr) {
     return 0;
 }
 
-// Einfuegen Datensatz todo pls check if it work like intended
+// Einfuegen Datensatz
 // rc: 0 = ok, 1 = error
 int db_insert(const string &hnr, const string &name, const string &plz, const string &ort) {
     PGresult *res;
