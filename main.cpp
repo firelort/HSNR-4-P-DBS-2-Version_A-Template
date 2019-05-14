@@ -33,14 +33,18 @@ void exitWithParameterError() {
  * Exits the program with a given error msg
  */
 void exitWithMsg(std::string error) {
+    //Print the error to the console
     std::cout << error << std::endl;
+
+    //Close/Finish db connection
+    db_logout();
     exit(EXIT_FAILURE);
 }
 
 /**
  * Program can import data from a file into a psql database.
- * @param argc
- * @param argv
+ * @param argc counter of the number of parameters
+ * @param argv Array of char arrays, each array is an input string
  * @return
  */
 

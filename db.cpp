@@ -27,9 +27,6 @@ int db_login(const string &user, const string &password, const string &host, con
         //print error msg
         std::cout << "SQL Error | Connection to database failed: " << PQerrorMessage(connection) << std::endl;
 
-        //finish connection
-        PQfinish(connection);
-
         //return with error code
         return 1;
     }
@@ -56,9 +53,6 @@ int db_begin() {
         //print error msg
         std::cout << "SQL Error | BEGIN command failed: " << PQerrorMessage(connection) << std::endl;
 
-        //finish connection
-        PQfinish(connection);
-
         //Clear the result variable
         PQclear(res);
 
@@ -82,9 +76,6 @@ int db_commit() {
         //print error msg
         std::cout << "SQL Error | END command failed: " << PQerrorMessage(connection) << std::endl;
 
-        //finish connection
-        PQfinish(connection);
-
         //Clear the result variable
         PQclear(res);
 
@@ -107,9 +98,6 @@ int db_rollback() {
     if (PQresultStatus(res) != PGRES_COMMAND_OK) {
         //print error msg
         std::cout << "SQL Error | ROLLBACK command failed: " << PQerrorMessage(connection) << std::endl;
-
-        //finish connection
-        PQfinish(connection);
 
         //Clear the result variable
         PQclear(res);
